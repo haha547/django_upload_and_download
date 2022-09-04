@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <button type="button" onclick="uploadFile();">Download</button>
+    <script>
+        function downloadFile(){
+            var data = new FormData();
+            data.append("file", $("input[id^='file']")[0].files[0]);
+            data.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: params,
+               success: function(response, status, request) {
+                        var disp = request.getResponseHeader('Content-Disposition');
+                        if (disp && disp.search('attachment') != -1) { //判斷是否爲文件
+                            var form = $('<form action="‘ +  url + ’" method="post"></form>');
+                            $('body').append(form);
+                            form.submit(); //自動提交
+                        }
+                    }
+            });
+        }
+    </script>
+</body>
+
+</html>
